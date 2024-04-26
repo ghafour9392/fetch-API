@@ -13,6 +13,7 @@ const options = {
   minute: "2-digit",
   second: "2-digit",
 };
+let searchBoxValue = "";
 
 btn.addEventListener("click", (e) => {
   e.target.classList.add("hidden");
@@ -46,6 +47,7 @@ btn.addEventListener("click", (e) => {
 
 searchBox.addEventListener("input", (e) => {
   const value = e.target.value;
+  searchBoxValue = value;
   tableBody.innerHTML = "";
 
   fetch("http://localhost:3000/transactions?refId_like=" + value)
@@ -73,6 +75,7 @@ searchBox.addEventListener("input", (e) => {
 
 sortPrice.addEventListener("click", (e) => {
   let exist;
+  let query;
   if (e.target.tagName === "TD") {
     e.target.children[0].classList.toggle("rotateUp");
     e.target.children[0].classList.toggle("rotateDown");
@@ -82,12 +85,12 @@ sortPrice.addEventListener("click", (e) => {
     e.target.classList.toggle("rotateDown");
     exist = e.target.classList[0];
   }
-  // console.log(exist)
+  searchBoxValue.length > 0? query = "&refId_like=" + searchBoxValue:query="";
   tableBody.innerHTML = "";
   fetch(
     `http://localhost:3000/transactions?_sort=${
-      exist === "rotateUp" ? "price" : "-price"
-    }`
+      exist === "rotateUp" ? "price&_order=asc" : "price&_order=desc"
+    }${query}`
   )
     .then((response) => response.json())
     .then((json) => {
@@ -123,12 +126,14 @@ sortDate.addEventListener("click", (e) => {
     e.target.classList.toggle("rotateDown");
     exist = e.target.classList[0];
   }
+  let query;
+  searchBoxValue.length > 0? query = "&refId_like=" + searchBoxValue:query="";
   // console.log(exist)
   tableBody.innerHTML = "";
   fetch(
     `http://localhost:3000/transactions?_sort=${
-      exist === "rotateUp" ? "date" : "-date"
-    }`
+      exist === "rotateUp" ? "date&_order=asc" : "date&_order=desc"
+    }${query}`
   )
     .then((response) => response.json())
     .then((json) => {
@@ -164,12 +169,14 @@ sortDefault.addEventListener("click", (e) => {
     exist = e.target.classList[0];
   }
 
+  let query;
+  searchBoxValue.length > 0? query = "&refId_like=" + searchBoxValue:query="";
   console.log(exist);
   tableBody.innerHTML = "";
   fetch(
     `http://localhost:3000/transactions?_sort=${
-      exist === "rotateUp" ? "id" : "-id"
-    }`
+      exist === "rotateUp" ? "id&_order=asc" : "id&_order=desc"
+    }${query}`
   )
     .then((response) => response.json())
     .then((json) => {
