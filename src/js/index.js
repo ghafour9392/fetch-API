@@ -47,17 +47,17 @@ btn.addEventListener("click", (e) => {
 searchBox.addEventListener("input", (e) => {
   const value = e.target.value;
   tableBody.innerHTML = "";
-  if (value === "-") {
-    fetch("http://localhost:3000/transactions?_sort=-price")
-      .then((response) => response.json())
-      .then((json) => {
-        json.map((t) => {
-          table.innerHTML += `
+
+  fetch("http://localhost:3000/transactions?refId_like=" + value)
+    .then((response) => response.json())
+    .then((json) => {
+      json.map((t) => {
+        tableBody.innerHTML += `
           <tr>
             <td>${t.id}</td>
             <td class=${t.type === "افزایش اعتبار" ? "priceUp" : "priceDown"}>${
-            t.type
-          }</td>
+          t.type
+        }</td>
             <td>${t.price}</td>
             <td>${t.refId}</td>
             <td>${new Date(t.date)
@@ -67,53 +67,8 @@ searchBox.addEventListener("input", (e) => {
               .replace(", ", " ساعت ")}</td>
           </tr>
         `;
-        });
       });
-  } else if (value === "+") {
-    fetch("http://localhost:3000/transactions?_sort=price")
-      .then((response) => response.json())
-      .then((json) => {
-        json.map((t) => {
-          table.innerHTML += `
-          <tr>
-            <td>${t.id}</td>
-            <td class=${t.type === "افزایش اعتبار" ? "priceUp" : "priceDown"}>${
-            t.type
-          }</td>
-            <td>${t.price}</td>
-            <td>${t.refId}</td>
-            <td>${new Date(t.date)
-              .toLocaleString("fa")
-              .padStart(2, "0")
-              .toString()
-              .replace(", ", " ساعت ")}</td>
-          </tr>
-        `;
-        });
-      });
-  } else {
-    fetch("http://localhost:3000/transactions?id=" + value)
-      .then((response) => response.json())
-      .then((json) => {
-        json.map((t) => {
-          tableBody.innerHTML += `
-          <tr>
-            <td>${t.id}</td>
-            <td class=${t.type === "افزایش اعتبار" ? "priceUp" : "priceDown"}>${
-            t.type
-          }</td>
-            <td>${t.price}</td>
-            <td>${t.refId}</td>
-            <td>${new Date(t.date)
-              .toLocaleString("fa")
-              .padStart(2, "0")
-              .toString()
-              .replace(", ", " ساعت ")}</td>
-          </tr>
-        `;
-        });
-      });
-  }
+    });
 });
 
 sortPrice.addEventListener("click", (e) => {
@@ -237,5 +192,3 @@ sortDefault.addEventListener("click", (e) => {
       });
     });
 });
-
-
